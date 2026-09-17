@@ -14,11 +14,13 @@ import { AnalyticsModule } from './components/modules/AnalyticsModule';
 import { AuditLogsModule } from './components/modules/AuditLogsModule';
 import { SettingsModule } from './components/modules/SettingsModule';
 import { AdminAuthScreen } from './components/auth/AdminAuthScreen';
+import { ChangePasswordModal } from './components/auth/ChangePasswordModal';
 import { X, ShieldCheck } from 'lucide-react';
 
 const AdminAppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [showRoleModal, setShowRoleModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const { user, isAuthenticated, isMfaPending, switchRole } = useAuth();
 
   // If unauthenticated or MFA step is pending, show Admin Auth Screen
@@ -44,6 +46,7 @@ const AdminAppContent: React.FC = () => {
         <AdminNavbar
           onRefreshData={() => alert('All connected node pipelines resynced!')}
           onOpenRoleModal={() => setShowRoleModal(true)}
+          onOpenChangePassword={() => setShowPasswordModal(true)}
         />
 
         {/* Dynamic Screen View */}
@@ -99,6 +102,12 @@ const AdminAppContent: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={showPasswordModal}
+        onClose={() => setShowPasswordModal(false)}
+      />
 
     </div>
   );
