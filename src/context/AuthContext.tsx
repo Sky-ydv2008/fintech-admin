@@ -32,28 +32,21 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const STORAGE_KEY_USER = 'trinode_admin_user_v2';
-const STORAGE_KEY_TOKEN = 'trinode_admin_token_v2';
+const STORAGE_KEY_USER = 'trinode_admin_user_v3';
+const STORAGE_KEY_TOKEN = 'trinode_admin_token_v3';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Default to NULL (Logged Out) on initial startup
   const [user, setUser] = useState<AdminUser | null>(() => {
     const saved = localStorage.getItem(STORAGE_KEY_USER);
     if (saved) {
       try { return JSON.parse(saved); } catch (e) { return null; }
     }
-    return {
-      id: 'admin_001',
-      name: 'Alex Mercer',
-      email: 'admin@trinode.ai',
-      role: 'Super Admin',
-      mfaEnabled: true,
-      mfaVerified: true,
-      lastLogin: new Date().toISOString(),
-    };
+    return null; // Logged out by default!
   });
 
   const [token, setToken] = useState<string | null>(() => {
-    return localStorage.getItem(STORAGE_KEY_TOKEN) || 'jwt_admin_session_token_2026';
+    return localStorage.getItem(STORAGE_KEY_TOKEN) || null; // Logged out by default!
   });
 
   const [isMfaPending, setIsMfaPending] = useState<boolean>(false);
@@ -93,7 +86,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const verifyMfa = (code: string): boolean => {
-    // 6-digit MFA code check
     if (code.trim().length === 6 || code === '123456') {
       if (user) {
         setUser({ ...user, mfaVerified: true });
