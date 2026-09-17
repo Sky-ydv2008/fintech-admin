@@ -13,18 +13,22 @@ import { AnomalyAuditModule } from './components/modules/AnomalyAuditModule';
 import { AnalyticsModule } from './components/modules/AnalyticsModule';
 import { AuditLogsModule } from './components/modules/AuditLogsModule';
 import { SettingsModule } from './components/modules/SettingsModule';
+import { AdminAuthScreen } from './components/auth/AdminAuthScreen';
 import { X, ShieldCheck } from 'lucide-react';
 
 const AdminAppContent: React.FC = () => {
   const [activeTab, setActiveTab] = useState<AdminTab>('dashboard');
   const [showRoleModal, setShowRoleModal] = useState(false);
-  const { user, login } = useAuth();
+  const { user, isAuthenticated, isMfaPending, switchRole } = useAuth();
+
+  // If unauthenticated or MFA step is pending, show Admin Auth Screen
+  if (!isAuthenticated || isMfaPending) {
+    return <AdminAuthScreen />;
+  }
 
   const handleRoleSwitch = (role: AdminRole) => {
-    if (user) {
-      login(user.email, role);
-      setShowRoleModal(false);
-    }
+    switchRole(role);
+    setShowRoleModal(false);
   };
 
   return (

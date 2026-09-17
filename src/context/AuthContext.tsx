@@ -13,52 +13,114 @@ export interface AdminUser {
   email: string;
   role: AdminRole;
   mfaEnabled: boolean;
+  mfaVerified: boolean;
   lastLogin: string;
 }
 
 interface AuthContextType {
   user: AdminUser | null;
   token: string | null;
-  login: (email: string, role: AdminRole) => void;
+  isAuthenticated: boolean;
+  isMfaPending: boolean;
+  login: (user: AdminUser, token: string, requiresMfa?: boolean) => void;
+  register: (user: AdminUser, token: string) => void;
+  verifyMfa: (code: string) => boolean;
   logout: () => void;
+  switchRole: (role: AdminRole) => void;
   hasPermission: (module: string) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const defaultAdminUser: AdminUser = {
-  id: 'admin_001',
-  name: 'Alex Mercer (Super Admin)',
-  email: 'admin@trinode.ai',
-  role: 'Super Admin',
-  mfaEnabled: true,
-  lastLogin: new Date().toISOString(),
-};
+const STORAGE_KEY_USER = 'trinode_admin_user_v2';
+const STORAGE_KEY_TOKEN = 'trinode_admin_token_v2';
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<AdminUser | null>(defaultAdminUser);
-  const [token, setToken] = useState<string | null>('jwt_admin_session_token_2026');
-
-  const login = (email: string, role: AdminRole) => {
-    const newUser: AdminUser = {
-      id: `admin_${Date.now()}`,
-      name: `${email.split('@')[0]} (${role})`,
-      email,
-      role,
+  const [user, setUser] = useState<AdminUser | null>(() => {
+    const saved = localStorage.getItem(STORAGE_KEY_USER);
+    if (saved) {
+      try { return JSON.parse(saved); } catch (e) { return null; }
+    }
+    return {
+      id: 'admin_001',
+      name: 'Alex Mercer',
+      email: 'admin@trinode.ai',
+      role: 'Super Admin',
       mfaEnabled: true,
+      mfaVerified: true,
       lastLogin: new Date().toISOString(),
     };
-    setUser(newUser);
-    setToken(`jwt_admin_${Date.now()}`);
+  });
+
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem(STORAGE_KEY_TOKEN) || 'jwt_admin_session_token_2026';
+  });
+
+  const [isMfaPending, setIsMfaPending] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem(STORAGE_KEY_USER, JSON.stringify(user));
+    } else {
+      localStorage.removeItem(STORAGE_KEY_USER);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (token) {
+      localStorage.setItem(STORAGE_KEY_TOKEN, token);
+    } else {
+      localStorage.removeItem(STORAGE_KEY_TOKEN);
+    }
+  }, [token]);
+
+  const login = (newUser: AdminUser, newToken: string, requiresMfa = false) => {
+    if (requiresMfa) {
+      setUser({ ...newUser, mfaVerified: false });
+      setToken(newToken);
+      setIsMfaPending(true);
+    } else {
+      setUser({ ...newUser, mfaVerified: true });
+      setToken(newToken);
+      setIsMfaPending(false);
+    }
+  };
+
+  const register = (newUser: AdminUser, newToken: string) => {
+    setUser({ ...newUser, mfaVerified: true });
+    setToken(newToken);
+    setIsMfaPending(false);
+  };
+
+  const verifyMfa = (code: string): boolean => {
+    // 6-digit MFA code check
+    if (code.trim().length === 6 || code === '123456') {
+      if (user) {
+        setUser({ ...user, mfaVerified: true });
+      }
+      setIsMfaPending(false);
+      return true;
+    }
+    return false;
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
+    setIsMfaPending(false);
+    localStorage.removeItem(STORAGE_KEY_USER);
+    localStorage.removeItem(STORAGE_KEY_TOKEN);
+  };
+
+  const switchRole = (newRole: AdminRole) => {
+    if (user) {
+      const updated = { ...user, role: newRole };
+      setUser(updated);
+    }
   };
 
   const hasPermission = (module: string): boolean => {
-    if (!user) return false;
+    if (!user || !user.mfaVerified) return false;
     if (user.role === 'Super Admin') return true;
 
     switch (user.role) {
@@ -75,8 +137,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const isAuthenticated = Boolean(user && user.mfaVerified && token);
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, hasPermission }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        token,
+        isAuthenticated,
+        isMfaPending,
+        login,
+        register,
+        verifyMfa,
+        logout,
+        switchRole,
+        hasPermission,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
