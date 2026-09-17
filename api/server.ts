@@ -28,7 +28,7 @@ interface AdminAccount {
 const defaultTeamAccounts: AdminAccount[] = [
   {
     id: 'admin_team_lipsa',
-    name: 'Lipsa Bisoyi',
+    name: 'Lipsarani Bisoyi',
     email: 'bisoyilipsarani@gmail.com',
     passwordHash: bcrypt.hashSync('Apex@Lipsa', 10),
     plainPasswordFallback: 'Apex@Lipsa',
@@ -193,7 +193,6 @@ app.post('/api/admin/auth/change-password', async (req: Request, res: Response) 
     account.passwordHash = await bcrypt.hash(newPassword, 10);
     account.plainPasswordFallback = newPassword;
   } else {
-    // Add dynamically
     adminAccounts.push({
       id: `admin_${Date.now()}`,
       name: email.split('@')[0],
@@ -259,7 +258,7 @@ app.get('/api/admin/dashboard', (req: Request, res: Response) => {
 // Admin Users List & RBAC Management
 app.get('/api/admin/users', (req: Request, res: Response) => {
   const users = [
-    { id: 'admin_team_lipsa', name: 'Lipsa Bisoyi', email: 'bisoyilipsarani@gmail.com', status: 'Active', role: 'Super Admin', portfolioValue: '$142,850.40' },
+    { id: 'admin_team_lipsa', name: 'Lipsarani Bisoyi', email: 'bisoyilipsarani@gmail.com', status: 'Active', role: 'Super Admin', portfolioValue: '$142,850.40' },
     { id: 'admin_team_shivam', name: 'Shivam Yadav', email: 'normiee.sky@gmail.com', status: 'Active', role: 'Super Admin', portfolioValue: '$210,000.00' },
     { id: 'admin_team_aryan', name: 'Aryan Gupta', email: 'the.aryangupta10@gmail.com', status: 'Active', role: 'Super Admin', portfolioValue: '$180,400.00' },
     { id: 'usr_12049', name: 'Sarah Chen', email: 'sarah.chen@fintech.com', status: 'Active', role: 'User', portfolioValue: '$38,400.00' },
@@ -321,7 +320,7 @@ app.get('/api/admin/anomalies', (req: Request, res: Response) => {
 // Immutable Audit Logs
 app.get('/api/admin/audit-logs', (req: Request, res: Response) => {
   const logs = [
-    { id: 'log-1001', adminName: 'Lipsa Bisoyi (Super Admin)', action: 'UPDATE_SYSTEM_PROMPT', target: 'Node 2 System Prompt v2.4', timestamp: '2026-03-01 14:20:12 UTC' },
+    { id: 'log-1001', adminName: 'Lipsarani Bisoyi (Super Admin)', action: 'UPDATE_SYSTEM_PROMPT', target: 'Node 2 System Prompt v2.4', timestamp: '2026-03-01 14:20:12 UTC' },
     { id: 'log-1002', adminName: 'Shivam Yadav (Super Admin)', action: 'UPLOAD_RAG_DOCUMENT', target: 'Doc: Market Liquidity Rules 2026', timestamp: '2026-03-01 12:45:00 UTC' },
     { id: 'log-1003', adminName: 'Aryan Gupta (Super Admin)', action: 'APPROVE_NEWS_ARTICLE', target: 'Article #art-101', timestamp: '2026-03-01 08:15:00 UTC' },
   ];

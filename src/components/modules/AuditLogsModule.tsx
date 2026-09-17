@@ -27,11 +27,10 @@ export interface AuditLogEntry {
 }
 
 const mockAuditLogs: AuditLogEntry[] = [
-  { id: 'log-1001', adminId: 'admin_001', adminName: 'Alex Mercer (Super Admin)', action: 'UPDATE_SYSTEM_PROMPT', target: 'Node 2 System Prompt v2.4', timestamp: '2026-03-01 14:20:12 UTC', metadata: 'Updated refusal guardrails and disclaimers', ipDevice: '192.168.1.1 (Chrome MacOS)' },
-  { id: 'log-1002', adminId: 'admin_003', adminName: 'David Vance (AI Admin)', action: 'UPLOAD_RAG_DOCUMENT', target: 'Doc: Market Liquidity Rules 2026', timestamp: '2026-03-01 12:45:00 UTC', metadata: 'Generated 48 chunks in pgvector index', ipDevice: '185.220.101.5 (Firefox Linux)' },
-  { id: 'log-1003', adminId: 'admin_001', adminName: 'Alex Mercer (Super Admin)', action: 'SUSPEND_USER', target: 'User: elena.r@capital.ch (usr_44012)', timestamp: '2026-03-01 11:10:30 UTC', metadata: 'Reason: Repeated failed login attempts', ipDevice: '192.168.1.1 (Chrome MacOS)' },
+  { id: 'log-1001', adminId: 'admin_team_lipsa', adminName: 'Lipsarani Bisoyi (Super Admin)', action: 'UPDATE_SYSTEM_PROMPT', target: 'Node 2 System Prompt v2.4', timestamp: '2026-03-01 14:20:12 UTC', metadata: 'Updated refusal guardrails and disclaimers', ipDevice: '192.168.1.1 (Chrome MacOS)' },
+  { id: 'log-1002', adminId: 'admin_team_shivam', adminName: 'Shivam Yadav (Super Admin)', action: 'UPLOAD_RAG_DOCUMENT', target: 'Doc: Market Liquidity Rules 2026', timestamp: '2026-03-01 12:45:00 UTC', metadata: 'Generated 48 chunks in pgvector index', ipDevice: '185.220.101.5 (Firefox Linux)' },
+  { id: 'log-1003', adminId: 'admin_team_aryan', adminName: 'Aryan Gupta (Super Admin)', action: 'APPROVE_NEWS_ARTICLE', target: 'Article #art-101', timestamp: '2026-03-01 08:15:00 UTC', metadata: 'Approved for public ticker feed', ipDevice: '104.28.14.2 (Safari iOS)' },
   { id: 'log-1004', adminId: 'admin_004', adminName: 'Support Admin', action: 'CONFIRM_FRAUD_ALERT', target: 'Tx: 0x55b1a...88ff', timestamp: '2026-03-01 09:30:15 UTC', metadata: 'Isolation score 78/100 confirmed malicious', ipDevice: '82.165.22.9 (Windows Edge)' },
-  { id: 'log-1005', adminId: 'admin_002', adminName: 'Content Admin', action: 'APPROVE_NEWS_ARTICLE', target: 'Article #art-101', timestamp: '2026-03-01 08:15:00 UTC', metadata: 'Approved for public ticker feed', ipDevice: '104.28.14.2 (Safari iOS)' },
 ];
 
 export const AuditLogsModule: React.FC = () => {

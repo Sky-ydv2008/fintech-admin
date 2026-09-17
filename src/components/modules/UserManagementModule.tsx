@@ -32,18 +32,17 @@ export interface AdminUserRecord {
 }
 
 const initialUsers: AdminUserRecord[] = [
-  { id: 'usr_89234', name: 'Alex Mercer', email: 'alex.mercer@apex.io', status: 'Active', role: 'Super Admin', createdAt: '2026-01-15', portfolioValue: '$142,850.40', watchlistCount: 5, aiRequestsCount: 142, lastActive: '2 mins ago' },
+  { id: 'admin_team_lipsa', name: 'Lipsarani Bisoyi', email: 'bisoyilipsarani@gmail.com', status: 'Active', role: 'Super Admin', createdAt: '2026-01-01', portfolioValue: '$142,850.40', watchlistCount: 5, aiRequestsCount: 142, lastActive: '2 mins ago' },
+  { id: 'admin_team_shivam', name: 'Shivam Yadav', email: 'normiee.sky@gmail.com', status: 'Active', role: 'Super Admin', createdAt: '2026-01-01', portfolioValue: '$210,000.00', watchlistCount: 8, aiRequestsCount: 204, lastActive: '5 mins ago' },
+  { id: 'admin_team_aryan', name: 'Aryan Gupta', email: 'the.aryangupta10@gmail.com', status: 'Active', role: 'Super Admin', createdAt: '2026-01-01', portfolioValue: '$180,400.00', watchlistCount: 6, aiRequestsCount: 180, lastActive: '12 mins ago' },
   { id: 'usr_12049', name: 'Sarah Chen', email: 'sarah.chen@fintech.com', status: 'Active', role: 'User', createdAt: '2026-02-01', portfolioValue: '$38,400.00', watchlistCount: 3, aiRequestsCount: 89, lastActive: '18 mins ago' },
-  { id: 'usr_66321', name: 'David Vance', email: 'david.vance@quantum.net', status: 'Active', role: 'AI Admin', createdAt: '2026-02-10', portfolioValue: '$94,120.00', watchlistCount: 8, aiRequestsCount: 310, lastActive: '1 hour ago' },
   { id: 'usr_44012', name: 'Elena Rostova', email: 'elena.r@capital.ch', status: 'Suspended', role: 'User', createdAt: '2026-02-14', portfolioValue: '$12,500.00', watchlistCount: 2, aiRequestsCount: 15, lastActive: '3 days ago' },
-  { id: 'usr_90123', name: 'Michael Sterling', email: 'm.sterling@global.org', status: 'Active', role: 'Content Admin', createdAt: '2026-02-20', portfolioValue: '$210,000.00', watchlistCount: 12, aiRequestsCount: 204, lastActive: '5 mins ago' },
 ];
 
 export const UserManagementModule: React.FC = () => {
   const [users, setUsers] = useState<AdminUserRecord[]>(initialUsers);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<'All' | 'Active' | 'Suspended'>('All');
-  const [activeUserDetail, setActiveUserDetail] = useState<AdminUserRecord | null>(null);
   const [roleModalUser, setRoleModalUser] = useState<AdminUserRecord | null>(null);
   const [newRole, setNewRole] = useState<AdminRole>('Analyst');
   const [notice, setNotice] = useState<string | null>(null);
@@ -133,7 +132,6 @@ export const UserManagementModule: React.FC = () => {
         </div>
       </div>
 
-      {/* Notice Toast */}
       {notice && (
         <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono flex items-center gap-2 animate-fadeIn">
           <CheckCircle2 className="w-4 h-4" />
@@ -204,7 +202,6 @@ export const UserManagementModule: React.FC = () => {
                         <button
                           onClick={() => setRoleModalUser(u)}
                           className="px-2.5 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white text-xs font-mono"
-                          title="Assign RBAC Role"
                         >
                           Role
                         </button>
@@ -250,13 +247,13 @@ export const UserManagementModule: React.FC = () => {
                 <select
                   value={newRole}
                   onChange={(e) => setNewRole(e.target.value as AdminRole)}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white focus:outline-none focus:border-orange-500"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#0B0C12] border border-white/10 text-xs text-white focus:outline-none focus:border-orange-500"
                 >
-                  <option value="Super Admin" className="bg-[#0B0C12]">Super Admin (Full Access)</option>
-                  <option value="Content Admin" className="bg-[#0B0C12]">Content Admin (News & Moderation)</option>
-                  <option value="AI Admin" className="bg-[#0B0C12]">AI Admin (Prompts & RAG Vectors)</option>
-                  <option value="Support Admin" className="bg-[#0B0C12]">Support Admin (Users & Anomalies)</option>
-                  <option value="Analyst" className="bg-[#0B0C12]">Analyst (Read-Only Metrics)</option>
+                  <option value="Super Admin">Super Admin (Full Access)</option>
+                  <option value="Content Admin">Content Admin (News & Moderation)</option>
+                  <option value="AI Admin">AI Admin (Prompts & RAG Vectors)</option>
+                  <option value="Support Admin">Support Admin (Users & Anomalies)</option>
+                  <option value="Analyst">Analyst (Read-Only Metrics)</option>
                 </select>
               </div>
 
